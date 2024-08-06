@@ -43,7 +43,7 @@ public class TranslationServiceImpl implements TranslationService {
         for (Future<String> future : futures) {
             try {
                 translatedText.append(future.get()).append(" ");
-            } catch (InterruptedException e) {
+            } catch (InterruptedException ignored) {
 
             } catch (ExecutionException e) {
                 System.out.println(e.getMessage());

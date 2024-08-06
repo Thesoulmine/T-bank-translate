@@ -1,7 +1,6 @@
 package org.example.tbanktranslate.dao;
 
 import org.example.tbanktranslate.model.Translation;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
