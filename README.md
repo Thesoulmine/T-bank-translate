@@ -4,6 +4,10 @@
 
 ### Вариант 1: docker-compose.yml
 
+1. Скачайте проект с GitHub
+
+2. Запустите проект с помощью Docker Compose: ```docker-compose up```
+
 ### Вариант 2: spring-boot
 
 1. Скачайте проект с GitHub
@@ -16,7 +20,7 @@ spring.datasource.username=ваше_имя_пользователя
 spring.datasource.password=ваш_пароль
 ```
   
-3. Запустите приложение с помощью команды ```./mvnw spring-boot:run``` в терминале
+3. Запустите приложение в терминале с помощью команды: ```./mvnw spring-boot:run``` 
 
 ## Как пользоваться:
 
