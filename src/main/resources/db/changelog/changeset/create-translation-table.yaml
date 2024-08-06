@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Shamil
+      changes:
+        - createTable:
+            tableName: translations
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: ip_address
+                  type: varchar(255)
+              - column:
+                  name: source_text
+                  type: text
+              - column:
+                  name: target_text
+                  type: text
+              - column:
+                  name: source_language_code
+                  type: varchar(10)
+              - column:
+                  name: target_language_code
+                  type: varchar(10)
