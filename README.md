@@ -6,7 +6,7 @@
 
 1. Скачайте проект с GitHub
 
-2. Запустите проект с помощью Docker Compose: ```docker-compose up```
+2. Запустите приложение с помощью Docker Compose: ```docker-compose up```
 
 ### Вариант 2: spring-boot
 
