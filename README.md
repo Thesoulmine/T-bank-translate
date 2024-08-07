@@ -12,7 +12,7 @@
 
 1. Скачайте проект с GitHub
 
-2. Откройте файл src/main/resources/application.properties и настройте параметры подключения к вашей базе данных:
+2. Откройте файл src/main/resources/application.properties и настройте параметры подключения к вашей postgresql базе данных:
 
 ```
 spring.datasource.url=jdbc:postgresql://localhost:5432/имя_вашей_бд
