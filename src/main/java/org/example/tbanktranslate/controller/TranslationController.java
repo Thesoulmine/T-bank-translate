@@ -41,6 +41,7 @@ public class TranslationController {
     @ExceptionHandler(YandexClientException.class)
     public ResponseEntity<ExceptionResponseDTO> handleCustomException(YandexClientException exception) {
         ExceptionResponseDTO errorResponse = new ExceptionResponseDTO(exception.getMessage());
+
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 }
