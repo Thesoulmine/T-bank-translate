@@ -25,10 +25,9 @@ public class TranslationDAOImpl implements TranslationDAO {
                 VALUES (?, ?, ?, ?, ?)
                 """;
 
-        Connection connection = null;
-        try {
-            connection = dataSource.getConnection();
+        try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(false);
+
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setString(1, translation.getIpAddress());
                 preparedStatement.setString(2, translation.getSourceText());
@@ -36,24 +35,18 @@ public class TranslationDAOImpl implements TranslationDAO {
                 preparedStatement.setString(4, translation.getSourceLanguageCode());
                 preparedStatement.setString(5, translation.getTargetLanguageCode());
                 preparedStatement.executeUpdate();
-            }
-            connection.commit();
-        } catch (SQLException e) {
-            try {
-                if (connection != null) {
+
+                connection.commit();
+            } catch (SQLException exception) {
+                try {
                     connection.rollback();
+                } catch (SQLException rollbackException) {
+                    throw new RuntimeException(rollbackException);
                 }
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
+                throw new RuntimeException(exception);
             }
-        } finally {
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+        } catch (SQLException exception) {
+            throw new RuntimeException(exception);
         }
     }
 }

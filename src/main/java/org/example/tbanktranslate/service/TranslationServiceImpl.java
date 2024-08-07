@@ -2,6 +2,7 @@ package org.example.tbanktranslate.service;
 
 import org.example.tbanktranslate.client.TranslateClient;
 import org.example.tbanktranslate.dao.TranslationDAO;
+import org.example.tbanktranslate.exception.YandexClientException;
 import org.example.tbanktranslate.model.Translation;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,27 @@ public class TranslationServiceImpl implements TranslationService {
     }
 
     @Override
-    public Translation translateAndSave(Translation translation) {
+    public Translation translateAndSave(Translation translation) throws YandexClientException {
+        List<Future<String>> futures = submitTranslateTasks(translation);
+        StringBuilder translatedText = new StringBuilder();
+
+        for (Future<String> future : futures) {
+            try {
+                translatedText.append(future.get()).append(" ");
+            } catch (InterruptedException exception) {
+                Thread.currentThread().interrupt();
+            } catch (ExecutionException exception) {
+                throw new YandexClientException(exception.getCause().getMessage());
+            }
+        }
+
+        translation.setTargetText(translatedText.toString().stripTrailing());
+        translationDAO.save(translation);
+
+        return translation;
+    }
+
+    private List<Future<String>> submitTranslateTasks(Translation translation) {
         List<Future<String>> futures = new ArrayList<>();
 
         for (String word : translation.getSourceText().split(" ")) {
@@ -39,20 +60,6 @@ public class TranslationServiceImpl implements TranslationService {
             futures.add(future);
         }
 
-        StringBuilder translatedText = new StringBuilder();
-        for (Future<String> future : futures) {
-            try {
-                translatedText.append(future.get()).append(" ");
-            } catch (InterruptedException ignored) {
-
-            } catch (ExecutionException e) {
-                System.out.println(e.getMessage());
-            }
-        }
-
-        translation.setTargetText(translatedText.toString().stripTrailing());
-        translationDAO.save(translation);
-
-        return translation;
+        return futures;
     }
 }
