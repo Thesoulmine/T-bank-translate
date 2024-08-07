@@ -1,5 +1,6 @@
 package org.example.tbanktranslate.service;
 
+import com.google.common.util.concurrent.RateLimiter;
 import org.example.tbanktranslate.client.TranslateClient;
 import org.example.tbanktranslate.dao.TranslationDAO;
 import org.example.tbanktranslate.exception.YandexClientException;
@@ -19,12 +20,14 @@ public class TranslationServiceImpl implements TranslationService {
     private final TranslationDAO translationDAO;
     private final TranslateClient translateClient;
     private final ExecutorService executorService;
+    private final RateLimiter rateLimiter;
 
     public TranslationServiceImpl(TranslationDAO translationDAO,
                                   TranslateClient translateClient) {
         this.translationDAO = translationDAO;
         this.translateClient = translateClient;
         executorService = Executors.newFixedThreadPool(10);
+        rateLimiter = RateLimiter.create(10);
     }
 
     @Override
@@ -35,8 +38,8 @@ public class TranslationServiceImpl implements TranslationService {
         for (Future<String> future : futures) {
             try {
                 translatedText.append(future.get()).append(" ");
-            } catch (InterruptedException exception) {
-                Thread.currentThread().interrupt();
+            } catch (InterruptedException ignored) {
+
             } catch (ExecutionException exception) {
                 throw new YandexClientException(exception.getCause().getMessage());
             }
@@ -52,6 +55,7 @@ public class TranslationServiceImpl implements TranslationService {
         List<Future<String>> futures = new ArrayList<>();
 
         for (String word : translation.getSourceText().split(" ")) {
+            rateLimiter.acquire(1);
             Future<String> future = executorService.submit(() ->
                     translateClient.translate(
                             word,
