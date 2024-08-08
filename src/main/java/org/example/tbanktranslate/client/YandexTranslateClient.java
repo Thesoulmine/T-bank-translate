@@ -1,5 +1,6 @@
 package org.example.tbanktranslate.client;
 
+import com.google.common.util.concurrent.RateLimiter;
 import org.example.tbanktranslate.dto.YandexTranslateRequestDTO;
 import org.example.tbanktranslate.dto.YandexTranslateResponseDTO;
 import org.example.tbanktranslate.exception.UnsupportedLanguageException;
@@ -17,6 +18,12 @@ public class YandexTranslateClient implements TranslateClient {
     @Value("${yandex.translate.client.api.key}")
     private String apiKey;
 
+    private final RateLimiter rateLimiter;
+
+    public YandexTranslateClient() {
+        rateLimiter = RateLimiter.create(10);
+    }
+
     @Override
     public String translate(String sourceText,
                             String sourceLanguageCode,
@@ -28,6 +35,7 @@ public class YandexTranslateClient implements TranslateClient {
                 createTranslateRequest(sourceText, sourceLanguageCode, targetLanguageCode, headers);
 
         try {
+            rateLimiter.acquire(1);
             ResponseEntity<YandexTranslateResponseDTO> response = restTemplate.postForEntity(
                     "https://translate.api.cloud.yandex.net/translate/v2/translate",
                     request,
