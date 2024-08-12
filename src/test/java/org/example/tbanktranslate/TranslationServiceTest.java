@@ -2,9 +2,7 @@ package org.example.tbanktranslate;
 
 import org.example.tbanktranslate.client.TranslateClient;
 import org.example.tbanktranslate.dao.TranslationDAO;
-import org.example.tbanktranslate.exception.YandexClientException;
 import org.example.tbanktranslate.model.Translation;
-import org.example.tbanktranslate.service.TranslationService;
 import org.example.tbanktranslate.service.TranslationServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +12,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
