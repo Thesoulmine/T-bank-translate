@@ -39,7 +39,7 @@ public class TranslationServiceTest {
     }
 
     @Test
-    public void testTranslateAndSave_Success() throws Exception {
+    public void testTranslateAndSave() throws Exception {
         List<String> words = Arrays.asList("привет", "мир");
 
         when(translateClient.translate(anyString(), anyString(), anyString()))
