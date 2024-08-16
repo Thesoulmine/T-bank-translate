@@ -2,7 +2,7 @@ package org.example.tbanktranslate.service;
 
 import org.example.tbanktranslate.client.TranslateClient;
 import org.example.tbanktranslate.dao.TranslationDAO;
-import org.example.tbanktranslate.exception.YandexClientException;
+import org.example.tbanktranslate.exception.TranslateClientException;
 import org.example.tbanktranslate.model.Translation;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +28,7 @@ public class TranslationServiceImpl implements TranslationService {
     }
 
     @Override
-    public Translation translateAndSave(Translation translation) throws YandexClientException {
+    public Translation translateAndSave(Translation translation) throws TranslateClientException {
         List<Future<String>> futures = submitTranslateTasks(translation);
         StringBuilder translatedText = new StringBuilder();
 
@@ -38,7 +38,7 @@ public class TranslationServiceImpl implements TranslationService {
             } catch (InterruptedException ignored) {
 
             } catch (ExecutionException exception) {
-                throw new YandexClientException(exception.getCause().getMessage());
+                throw new TranslateClientException(exception.getCause().getMessage());
             }
         }
 

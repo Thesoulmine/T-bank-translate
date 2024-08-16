@@ -4,7 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.example.tbanktranslate.dto.ExceptionResponseDTO;
 import org.example.tbanktranslate.dto.TranslationRequestDTO;
 import org.example.tbanktranslate.dto.TranslationResponseDTO;
-import org.example.tbanktranslate.exception.YandexClientException;
+import org.example.tbanktranslate.exception.TranslateClientException;
 import org.example.tbanktranslate.mapper.TranslationMapper;
 import org.example.tbanktranslate.model.Translation;
 import org.example.tbanktranslate.service.TranslationService;
@@ -29,7 +29,7 @@ public class TranslationController {
 
     @PostMapping("/api/translate")
     public ResponseEntity<TranslationResponseDTO> translate(@RequestBody TranslationRequestDTO translationRequestDTO,
-                                                            HttpServletRequest request) throws YandexClientException {
+                                                            HttpServletRequest request) throws TranslateClientException {
         Translation translation = translationMapper.toEntity(translationRequestDTO);
         translation.setIpAddress(request.getRemoteAddr());
 
@@ -38,8 +38,8 @@ public class TranslationController {
                 HttpStatus.OK);
     }
 
-    @ExceptionHandler(YandexClientException.class)
-    public ResponseEntity<ExceptionResponseDTO> handleCustomException(YandexClientException exception) {
+    @ExceptionHandler(TranslateClientException.class)
+    public ResponseEntity<ExceptionResponseDTO> handleCustomException(TranslateClientException exception) {
         return new ResponseEntity<>(
                 new ExceptionResponseDTO(exception.getMessage()),
                 HttpStatus.BAD_REQUEST);
